@@ -1,0 +1,4 @@
+[apache-front]
+#digite o IPs privados dos fronts
+10.0.1.129
+10.0.1.21

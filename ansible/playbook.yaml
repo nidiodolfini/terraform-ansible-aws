@@ -1,0 +1,129 @@
+# estou falando em quais maqunias vão ser instalados, onde estão as maquuinas no hosts.yml
+# serguir nome no arquivo hosts
+- hosts: apache-front 
+#tudo que vem depois de tasks é terefa
+  tasks:
+  - name: instalar dependencias do docker
+    apt: # apt-get install apt-transport-https 
+      name: "{{item}}"
+      state: present 
+      update_cache: yes
+    loop:
+      - apt-transport-https #0
+      - ca-certificates #1
+      - curl
+      - gnupg-agent
+      - software-properties-common  
+
+  - name: adicionar chave GPG
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+
+  - name: adicionar repositório Docker de instalador do docker
+    apt_key:
+      url: deb https://download.docker.com/linux/ubuntu bionic stable
+      state: present
+
+  - name: instala docker
+    apt:
+      name: "{{item}}"
+      state: latest
+      update_cache: yes
+    loop:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+
+  - name: instalar python e pip ansible precisa para poder iniciar o Docker, executar
+    apt:
+      name: "{{item}}"
+      state: latest
+      update_cache: yes
+    loop:
+      - python3
+      - pip
+
+  - name: Instalar recurso docker ansible precisa
+    pip:
+      name: docker
+
+  handlers:
+    - name: reiniciar docker
+      service: 
+        name: docker 
+        state: restarted
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # # estou passando o nome da tafera no a primeira tarefa
+  # - name: Instalando o apache
+  # # de apt: até o pkg: é a mesma coisa que apt-get install
+  #   apt:
+  #     pkg:
+  #     # o install é no apache2
+  #     - apache2
+  #     # mesma coisa que apt-get update 
+  #     update_cache: yes
+  #   # nos tornamos o root, mesma coisa que dar um sudo alguma
+  #   become: yes
+
+  # # aqu itemos uma segunda tarefa e o nome é Git clone
+  # - name: Git clone
+  # # chamando um pacotinho do ansible que cuida do Git
+  #   ansible.builtin.git:
+  #     # o repositório que vamos clonar
+  #     repo: https://github.com/ibsonjunior/Mulher_Maravilha.git
+  #     # onde vamos clonar
+  #     dest: /home/ubuntu/Mulher_Maravilha/
+  #     separate_git_dir: /var/www/html/
+  #     # qual é a branch que vamos clonar
+  #     version: main
+  #     # aqui estopu dizendo que quero seja feito update sempre que rodar a tarefa
+  #     update: yes
+  #     # force pq eu quero, baixa e pronto. eu mandei.
+  #     force: yes
+
+
+  # # outraaaaa tafera agora pra copiaar com o nome de copiar pasta
+  # - name: copiar pasta
+  #   #este atributo command: tu pode colocar qualquer comando que usaria na linha de comando, poderioa ping, cd 
+  #   command: cp -rf /home/ubuntu/Mulher_Maravilha/. /var/www/html/
+  #   # nos tornamos o root, mesma coisa que dar um sudo alguma
+  #   become: yes
+
+
+
+
+
+#acesso via ssh (remotamente) a maquina instance_mngt pelo IP 
+# copiar a chave private para a instancia de instance_mngt
+#criar arquivos do ansible
+#nano playbook.yaml
+#copia e cola o arquivo
+#nano hosts.yaml
+# coloca os ips privados dos fronts
+
+#pra caso queira fazer tudo pelo nano, vulgo notepad do terminal vuldo telinha preta
+
+
+# comando para executar o ansible na maquina vulgo instancia EC2 de gerenciamento
+#ansible-playbook playbook.yml -i hosts.yml -u ubuntu --private-key terraform-aws 
