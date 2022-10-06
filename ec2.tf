@@ -1,7 +1,7 @@
 #instando = VM
 resource "aws_instance" "front_nidio-ec2" {
   #falando pra criar dois recursos
-  count = 2
+  count = 0
   #a Amazon Machine Image que será usada
   ami = "ami-0b6937ac543fe96d7"
   #tipo da instancia, ou seja o tipo de hardware que será usado

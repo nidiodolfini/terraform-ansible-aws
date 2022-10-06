@@ -21,7 +21,7 @@
       state: present
 
   - name: adicionar repositório Docker de instalador do docker
-    apt_key:
+    apt_repository:
       url: deb https://download.docker.com/linux/ubuntu bionic stable
       state: present
 
@@ -34,6 +34,7 @@
       - docker-ce
       - docker-ce-cli
       - containerd.io
+      - docker-compose
 
   - name: instalar python e pip ansible precisa para poder iniciar o Docker, executar
     apt:
